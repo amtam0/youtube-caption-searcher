@@ -1,0 +1,9 @@
+flask==0.12.2
+pandas
+#plotly==2.0.16
+wordcloud
+matplotlib
+webvtt-py
+youtube_dl
+#scikit-learn
+#scipy

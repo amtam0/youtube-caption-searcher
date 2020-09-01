@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+
+  <body>
+    <div class="container-fluid p-5">
+      
+      <form id="formElem">
+        
+        <div class="row justify-content-around">
+          <div class="col mb-3">
+            <h1>Youtube Caption Searcher</h1>
+            <br>
+            <input type="text" placeholder="Paste Youtube URL" size="25" name="link">
+            <input type="text" placeholder="Search for Keyword" size="15" name="keyword">
+            <select class="" name="Language" id="Language">
+                <option value="ar">Arabic</option>
+                <option value="bn">Bengali</option>
+                <option value="zh">Chinese</option>
+                <option value="de">Deutsch</option>
+                <option value="en" selected>English</option> <!-- Selected by default-->
+                <option value="fr">French</option>
+                <option value="hi">Hindi</option>
+                <option value="it">Italian</option>
+                <option value="ja">Japanese</option>
+                <option value="ko">Korean</option>
+                <option value="ml">Malayalam</option>
+                <option value="pt">Portuguese</option>
+                <option value="ru">Russian</option>
+                <option value="es">Spanish</option>
+            </select>
+            <input class="btn btn-default" type="submit" value="Search">
+          </div>
+        </div>
+
+        <div class="row justify-content-around">
+          <div class="col d-flex justify-content-left mb-3">
+            <!-- {{videos | safe}} -->
+            <div id="decodedlink"></div>
+          </div>
+          <div class="col d-flex justify-content-left mb-3">
+            <!-- {{image | safe}} -->
+          </div>
+        </div>
+
+        <div class="row justify-content-around">
+          <div class="col">
+            <!-- {{tables | safe}} -->
+            <div id="decodedresult"></div>
+          </div>
+        </div>
+      
+      </form>
+      
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+      // https://stackoverflow.com/a/63255139/7358899
+      formElem.onsubmit = async (e) => {
+        e.preventDefault();
+        var form = document.querySelector("#formElem");
+       // var form = document.forms[0];
+  
+          data = {
+            link : form.querySelector('input[name="link"]').value,
+            keyword : form.querySelector('input[name="keyword"]').value,
+            // language : form.querySelector('option[selected="selected"]').value, 
+            language : form.querySelector('option:checked').value
+          }
+  
+          let response = await fetch('https://nha5da5qh7.execute-api.eu-west-1.amazonaws.com/test1', {
+                  method: 'POST', // or 'PUT'
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(data),
+          })
+  
+          let text = await response.text(); // read response body as text
+          let results = JSON.parse(text);
+          let body_result = JSON.parse(results["body"]);
+          
+          document.querySelector("#decodedlink").innerHTML = body_result["video_link"]; 
+          document.querySelector("#decodedresult").innerHTML = body_result["result"];     
+      };
+    </script>
+  </body>
+</html>
